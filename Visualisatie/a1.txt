@@ -1,0 +1,14 @@
+A,0,3,hor,
+
+A,4,1,hor
+,
+D,4,0,ver
+,
+D,3,4,hor,
+
+B,5,4,hor,
+T,2,3,hor,
+H,3,4,ver
+,
+E,0,2,ver,
+F,0,5,ver
