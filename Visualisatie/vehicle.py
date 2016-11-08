@@ -9,11 +9,11 @@ TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',
 class vehicle(object):
     def __init__(self, id, x, y, orientation, i):
         """ check is car if exists and assigns id, length and color"""
-
-        if id in CAR_ID:
+        self.i = i
+        if id[0] in CAR_ID:
             self.id = id
             self.length = 2
-        elif id in TRUCKS_ID:
+        elif id[0] in TRUCKS_ID:
             self.id = id
             self.length = 3
         else:
@@ -46,7 +46,7 @@ class vehicle(object):
         else:
             raise ValueError('Invalid orientation {0}'.format(orientation))
 
-        if x_end > i or y_end > i:
+        if x_end > self.i or y_end > self.i:
             raise ValueError('Invalid placing on board')
 
 

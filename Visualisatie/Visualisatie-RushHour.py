@@ -9,18 +9,22 @@ TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',
 
 
 class Board(Tkinter.Frame):
-    def __init__(self, width):
+    def __init__(self, width, board_level):
         self.width = width
         self.height = width
+        self.board_level = board_level + ".txt"
         vehicles = []
-        with open('a1.txt', 'r') as f:
-            for line in f:
-                line = line[:-1] if line.endswith('\n') else line
-                id, x, y, orientation = line
-                print a
-                vehicles.append(vehicle(id, int(x), int(y), orientation, 6))
-
-        f.close()
+        text_file = open(self.board_level, "r")
+        lines = text_file.read().split('\n')
+        for i in lines:
+            j = i.split(',')
+            vehicle_id = j[0]
+            vehicle_x = j[1]
+            vehicle_y = j[2]
+            vehicle_or = j[3]
+            #print vehicle_id
+            vehicles.append(vehicle(vehicle_id, int(vehicle_x), int(vehicle_y), vehicle_or, 6))
+        #print vehicles
         table = table_retriever(vehicles)
         # format of informationboard
         visualize(table, self.width, self.height)
@@ -34,16 +38,15 @@ def table_retriever(vehicles):
              [' ', ' ', ' ', ' ', ' ', ' '],
              [' ', ' ', ' ', ' ', ' ', ' '],
              [' ', ' ', ' ', ' ', ' ', ' ']]
+    
     for vehicle in vehicles:
         x, y = vehicle.x, vehicle.y
         if vehicle.orientation == 'hor':
             for i in range(vehicle.length):
-                table[y][x] = vehicle.id
-                table[y][x+1] = vehicle.id
+                table[x][y+i] = vehicle.id
         else:
             for i in range(vehicle.length):
-                table[y][x] = vehicle.id
-                table[y+1][x] = vehicle.id
+                table[x+i][y] = vehicle.id
     return table
 
 
@@ -51,7 +54,10 @@ def visualize(table, width, height):
     canvas = Tkinter.Tk()
     for r in range(width):
         for c in range(height):
-            Tkinter.Label(canvas, text=(table[r][c]), borderwidth=20, background=CAR_ID[table[r][c]]).grid(row=r, column=c)
+            if table[r][c][0] in CAR_ID:
+                Tkinter.Label(canvas, text=(table[r][c]), borderwidth=20, background=CAR_ID[table[r][c][0]]).grid(row=r, column=c)
+            else:
+                Tkinter.Label(canvas, text=(table[r][c]), borderwidth=20, background=TRUCKS_ID[table[r][c][0]]).grid(row=r, column=c)
     canvas.mainloop()
 
 def start_rushhour():
@@ -82,6 +88,6 @@ def start_rushhour():
                 i = c
                 j = c
             break
-    Board(i)
+    Board(i, a)
 
 start_rushhour()
