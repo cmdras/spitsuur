@@ -1,4 +1,4 @@
-CAR_ID = {'A': 'cyam2', 'B': 'CadetBlue', 'C': 'RoyalBlue1',
+CAR_ID = {'A': 'cyan2', 'B': 'CadetBlue', 'C': 'RoyalBlue1',
           'D': 'dark orange', 'T': 'red2'}
 
 TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',

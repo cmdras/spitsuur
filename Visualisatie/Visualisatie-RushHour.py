@@ -22,9 +22,7 @@ class Board(Tkinter.Frame):
             vehicle_x = j[1]
             vehicle_y = j[2]
             vehicle_or = j[3]
-            #print vehicle_id
             vehicles.append(vehicle(vehicle_id, int(vehicle_x), int(vehicle_y), vehicle_or, self.width))
-        #print vehicles
         table = table_retriever(vehicles, self.width)
         # format of informationboard
         visualize(table, self.width, self.height)
@@ -33,17 +31,9 @@ class Board(Tkinter.Frame):
 
 def table_retriever(vehicles, size):
     
-    """
+    
     table = [[' ' for i in xrange(size)] for i in xrange(size)]
 
-    """
-    table = [[' ', ' ', ' ', ' ', ' ', ' '],
-             [' ', ' ', ' ', ' ', ' ', ' '],
-             [' ', ' ', ' ', ' ', ' ', ' '],
-             [' ', ' ', ' ', ' ', ' ', ' '],
-             [' ', ' ', ' ', ' ', ' ', ' '],
-             [' ', ' ', ' ', ' ', ' ', ' ']]
-    
     for vehicle in vehicles:
         x, y = vehicle.x, vehicle.y
         if vehicle.orientation == 'hor':
@@ -66,41 +56,22 @@ def visualize(table, width, height):
     canvas.mainloop()
 
 def start_rushhour():
-    a1 = 6
-    a2 = 6
-    a3 = 6
-    b1 = 9
-    b2 = 9
-    b3 = 9
+    a = 6
+    b = 9
     c = 12
     print "Difficulty  1 = easy, 2 = normal, 3 = hard"
     print "A is 6*6, B is 9*9, C is 12*12"
     print "Choice option example: option_a1"
     while True:
-        a = str(raw_input("Which board do you want to play?: "))
-        if a == "a1" or a == "a2" or a == "a3" or a == "b1" or a == "b2" or a == "b3" or a == "c":
-            if a == "a1":
-                i = a1
-                j = a1
-            if a == "a2":
-                i = a2
-                j = a2
-            if a == "a3":
-                i = a3
-                j = a3
-            if a == "b1":
-                i = b1
-                j = b1
-            if a == "b2":
-                i = b2
-                j = b2
-            if a == "b3":
-                i = b3
-                j = b3
-            if a == "c":
+        game = str(raw_input("Which board do you want to play?: "))
+        if game[0] == "a" or game[0] == "b" or game[0] == "c":
+            if game == "a1" or game == "a2" or game == "a3":
+                i = a
+            if game == "b1" or game == "b2" or game == "b3":
+                i = b
+            if game == "c":
                 i = c
-                j = c
             break
-    Board(i, a)
+    Board(i, game)
 
 start_rushhour()
