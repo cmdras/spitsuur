@@ -37,12 +37,12 @@ class vehicle(object):
 
         if orientation == 'hor':
             self.orientation = orientation
-            x_end = self.x + (self.length - 1)
-            y_end = self.y
+            x_end = self.x 
+            y_end = self.y + (self.length - 1)
         elif orientation == 'ver':
             self.orientation = orientation
-            x_end = self.x
-            y_end = self.y + (self.length - 1)
+            x_end = self.x + (self.length - 1)
+            y_end = self.y 
         else:
             raise ValueError('Invalid orientation {0}'.format(orientation))
 
