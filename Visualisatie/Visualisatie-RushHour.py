@@ -19,10 +19,10 @@ class Board(Tkinter.Frame):
         for i in lines:
             j = i.split(',')
             vehicle_id = j[0]
-            vehicle_x = j[1]
-            vehicle_y = j[2]
+            vehicle_row_v = j[1]
+            vehicle_col_v = j[2]
             vehicle_or = j[3]
-            vehicles.append(vehicle(vehicle_id, int(vehicle_x), int(vehicle_y), vehicle_or, self.width))
+            vehicles.append(vehicle(vehicle_id, int(vehicle_row_v), int(vehicle_col_v), vehicle_or, self.width))
         table = table_retriever(vehicles, self.width)
         # format of informationboard
         visualize(table, self.width, self.height)
@@ -30,18 +30,18 @@ class Board(Tkinter.Frame):
 
 
 def table_retriever(vehicles, size):
-    
-    
+
+
     table = [[' ' for i in xrange(size)] for i in xrange(size)]
 
     for vehicle in vehicles:
-        x, y = vehicle.x, vehicle.y
+        row_v, col_v = vehicle.row_v, vehicle.col_v
         if vehicle.orientation == 'hor':
             for i in range(vehicle.length):
-                table[x][y+i] = vehicle.id
+                table[row_v + 1][col_v] = vehicle.id
         else:
             for i in range(vehicle.length):
-                table[x+i][y] = vehicle.id
+                table[row_v][col_v + 1] = vehicle.id
     return table
 
 
