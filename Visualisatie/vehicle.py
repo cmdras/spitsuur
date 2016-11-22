@@ -7,9 +7,9 @@ TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',
 # vehicle: id, x, y, orientation, i
 
 class vehicle(object):
-    def __init__(self, id, x, y, orientation, i):
+    def __init__(self, id, row_v, col_v, orientation, board_size):
         """ check is car if exists and assigns id, length and color"""
-        self.i = i
+        self.board_size = board_size
         if id[0] in CAR_ID:
             self.id = id
             self.length = 2
@@ -22,13 +22,13 @@ class vehicle(object):
 
     #    """ check if x and y coordinates are legal, if yes assign them """
 
-        if 0 <= x <= i:
-            self.x = x
+        if 0 <= row_v <= board_size:
+            self.row_v = row_v
         else:
             raise ValueError('Invalid x')
 
-        if 0 <= y <= i:
-            self.y = y
+        if 0 <= col_v <= board_size:
+            self.col_v = col_v
         else:
             raise ValueError('Invalid y')
 
@@ -37,18 +37,19 @@ class vehicle(object):
 
         if orientation == 'hor':
             self.orientation = orientation
-            x_end = self.x 
-            y_end = self.y + (self.length - 1)
+            row_v_end = self.row_v 
+            col_v_end = self.col_v + (self.length - 1)
         elif orientation == 'ver':
             self.orientation = orientation
-            x_end = self.x + (self.length - 1)
-            y_end = self.y 
+            row_v_end = self.row_v + (self.length - 1)
+            col_v_end = self.col_v 
         else:
             raise ValueError('Invalid orientation {0}'.format(orientation))
 
-        if x_end > self.i or y_end > self.i:
+        if row_v_end > self.board_size or col_v_end > self.board_size:
             raise ValueError('Invalid placing on board')
-                    
+
+
         print "Vehicle is oke!"
 
     def __eq__(self, other):
