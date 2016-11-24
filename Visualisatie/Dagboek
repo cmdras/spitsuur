@@ -1,0 +1,33 @@
+Dagboek
+
+eerste week
+
+Vehicles bestand gemaakt, en daarnaast een visualitsatie bestand gemaakt.
+In het visualisatie bestand hadden we de Tkinter functie gevonden die ons hielp het mooi te visualiseren.
+Er is ook een los bestamd gemaakt voor elk board met coordinaten van elke auto op de standaardboorden. 
+Daarnaast hebben we in het vehicle bestand de kleurcodes meegegeven die het meest representief zijn van de originele kleuren op het standaad boord.
+
+
+week 2
+Verder uitwerking van de visualisatie waar we beweging in de auto's kregen. Ook mede door het hoorcollege, goede ideeen op gedaan voor
+onze algoritmes. Die vrijdag ook de presentatie gedaan over hoe we alles nu zo hebben gevisualiseerd, en wat de ideeen zijn voor het 
+algoritme er verdere pruning. Ons idee was om vanuit de oplossing te werk te gaan, en we kregen daar goede feedback voor, het Bi-directional
+algoritm. 
+
+Week 3
+Breadth firts algoritme verder uitgewerkt. Functies geschreven voor de queue en een archive, en het stappenplan aangehouden van wat 
+er in het college werd verteld; waar je eerst het standaardaard bord in de queue stopt. Ons visualisatie bestand was nog vrij onoverzichtelijk,
+maar we hebben wel de functie draaiende gekregen. Echter alleen niet hoe wij het wouden laten werken; sommige auto's gingen voor een deel
+buiten het board en kwamen er aan de andere kant weer bij. In het weekend van week 3 op week 4, het bestand bijgewerkt en meer overzichtelijk gemaakt,
+en werkend gekregen op een manier waar de auto's wel binnen het boord blijven.
+
+Week 4
+Het algoritme getest, maar vanaf ongeveer level 12 werd de snelheid aanzienelijk lager. We zijn zelf al het eerste boord nagegaan en zou met 
+ongeveer 31 stappen moeten kunnen worden opgelost, dus zouden we het algoritme heel lang moeten aanzetten om tot de oplossing te komen.
+Dus wouden we eerst de overbodige stappen, van bijvoorbeeld een auto die 1 stap beweegt waarbij de mogelijkheden van elke andere auto niet beter
+zijn geworden, weg te halen zodat de datastructuur niet veel te groot word. Japser wou dit doen door elke auto een 'age' mee te geven of het
+een oude of nieuwe auto is(die dus is verplaatst) en daarna kijkt of er een zelfde volgorde uitkomt als dat board weer de mogelijke bewegingen
+checkt. Vasco had het idee de auto's die kunnen bewegen op hun orientatie en soort(dus hor of ver en de groote), een waarde mee te geven in
+de vorm van een dicitonary en daarna weer dit nieuwe board op dezelfde checked, alleen door de dicitonary waarde niet nog een keer op dezelfde
+auto checked; je kan zien of de auto's bij een beweging van 1 stap de andere auto's ook kunnen bewegen. 
+
