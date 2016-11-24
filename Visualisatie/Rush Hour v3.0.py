@@ -118,8 +118,8 @@ def start_vehicles(board_level, width):
     for i in lines:
         j = i.split(',')
         vehicle_id = j[0]
-        vehicle_row_v = j[2]
-        vehicle_col_v = j[1]
+        vehicle_row_v = j[1]
+        vehicle_col_v = j[2]
         vehicle_or = j[3]
         vehicles.append(vehicle(vehicle_id, int(vehicle_row_v), int(vehicle_col_v), vehicle_or, width))
     return vehicles
