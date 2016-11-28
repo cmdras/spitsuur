@@ -134,6 +134,7 @@ def solver(table):
                 list_inter.append(inter)
                 # check of array vehicles al in queue of archive zit (zelfde verhaal als hierboven, geen idee of dit ook daadwerkelijk werkt)
                 # doe age_compare, zelfde vehicles met zelfde age, dan kan de laatste item in de queue verwijderd worden en de nieuwe worden aangesloten
+                # dit werkt blijkbaar ook nog niet. Immers is de laatste item in de queue niet perse de 'vader' van inter
                 if inter != queue.items and inter != archive.items:
                     if age_compare(inter, queue.items[-1]):
                         del queue.items[-1]
