@@ -144,13 +144,25 @@ def solver(table):
         print "Queue: ", len(queue.items)
         myfunc()
 
+# hasher, nog niet geïmplementeerd maar misschien bruikbaar
+def hasher(vehicles):
+    hashed = ''
+    for i in vehicles:
+        a = str(i.id)
+        b = str(i.row_v)
+        c = str(i.col_v)
+        d = str(i.length)
+        e = str(i.orientation)
+        hashed += a + b + c + d + e
+    return hashed
+
 # age_compare, check de eigenschappen van twee vehicles en de id, als match dan return true
 def age_compare(list1, list2):
     for i in list1:
-        if i.age == 'o':
+        if i.age == 'n':
             a = i.id
     for j in list2:
-        if j.age == 'o':
+        if j.age == 'n':
             b = j.id
     return a == b
 
