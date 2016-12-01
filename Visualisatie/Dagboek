@@ -31,3 +31,10 @@ checkt. Vasco had het idee de auto's die kunnen bewegen op hun orientatie en soo
 de vorm van een dicitonary en daarna weer dit nieuwe board op dezelfde checked, alleen door de dicitonary waarde niet nog een keer op dezelfde
 auto checked; je kan zien of de auto's bij een beweging van 1 stap de andere auto's ook kunnen bewegen. 
 
+Week 5
+Bij het draaien duurde het toch heel lang en werd het de archive absurd groot. Wat blijkt is dat de check op van de queue op de archive gebeurd 
+op basis van het adress in het geheugen wat dus altijd uniek is. Op donderdag nog niet uitgevonden hoe we dit bijvoorbeeld naar een string
+muteren, zodat je strings met elkaar kan vergelijken. Hierdoor zijn we nog niet toegekomen aan de bidirectional search die we zsm willen gaan
+implementeren. Mede ook omdat om een oplossing te hebben van het boord waarvan je kan ook gaat zoeken in de biderectional search, we eerst op een
+snellere manier bij deze oplossing moeten komen, wat dus op dit moment wordt tegenhouden door de lange tijd die het duurt om de oplossing op
+de normale breadth first manier te verkrijgen
