@@ -37,4 +37,7 @@ op basis van het adress in het geheugen wat dus altijd uniek is. Op donderdag no
 muteren, zodat je strings met elkaar kan vergelijken. Hierdoor zijn we nog niet toegekomen aan de bidirectional search die we zsm willen gaan
 implementeren. Mede ook omdat om een oplossing te hebben van het boord waarvan je kan ook gaat zoeken in de biderectional search, we eerst op een
 snellere manier bij deze oplossing moeten komen, wat dus op dit moment wordt tegenhouden door de lange tijd die het duurt om de oplossing op
-de normale breadth first manier te verkrijgen
+de normale breadth first manier te verkrijgen.
+Aan het einde van de dag hebben we twee functies erbij geschreven. De eerste returned een array met alle id's van de vehicles op het bord. Dit
+wordt meegegeven aan de tweede functie, die een string maakt van een array van vehicles. Deze functie bewaart alle coordinaten van een vehicle op 
+in een string, en rangschikt die volgens een bepaalde sequentie. Hierdoor heb je in principe voor elk mogelijke bord een unieke string.
