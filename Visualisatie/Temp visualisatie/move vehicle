@@ -1,0 +1,22 @@
+move_vehicle = []
+
+for vehicle in vehicles:
+    if vehicle.orientation = 'hor' && vehicle.length < 3:
+        if table[vehicle.x - 1][vehicle.y] ||
+         table[vehicle.x + 2][vehicle.y] == ' '
+            move_vehicle.append(vehicle)
+    if else vehicle.orientation = 'hor':
+        if table[vehicle.x - 1][vehicle.y] ||
+         table[vehicle.x + 3][vehicle.y] == ' '
+            move_vehicle.append(vehicle)
+    if else vehicle.orientation = 'ver' && vehicle.length < 3:
+        if table[vehicle.x][vehicle.y -1] ||
+        table[vehicle.x][vehicle.y + 2] == ' '
+            move_vehicle.append(vehicle)
+    if else vehicle.orientation = 'ver':
+        if table[vehicle.x][vehicle.y - 1] ||
+         table[vehicle.x][vehicle.y + 3] == ' '
+            move_vehicle.append(vehicle)
+
+print(move_vehicle)
+
