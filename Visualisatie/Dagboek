@@ -41,3 +41,10 @@ de normale breadth first manier te verkrijgen.
 Aan het einde van de dag hebben we twee functies erbij geschreven. De eerste returned een array met alle id's van de vehicles op het bord. Dit
 wordt meegegeven aan de tweede functie, die een string maakt van een array van vehicles. Deze functie bewaart alle coordinaten van een vehicle op 
 in een string, en rangschikt die volgens een bepaalde sequentie. Hierdoor heb je in principe voor elk mogelijke bord een unieke string.
+
+
+Week 6 
+Dinsdag: We hebben het algoritme met een valide check op de acrhive gemaakt doormiddel van referenties te maken van elke mogelijke positie,
+van een auto. En dan dus door deze referentie te gebruiken en niet een nieuw object aan te maken elke keer, check je dus de plaats op dezelfde
+plek in het geheugen en wordt er niks meer geweigerd voor de archive. Verder hebben we gekeken naar mogelijkheden om te prunen door bijboorbeeld
+in de laatste stap(pen) de rest van de vertakkingen weg te halen omdat dat de enige(n) stap(pen) zijn om tot de oplossing te komen.
