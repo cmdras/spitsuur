@@ -1,20 +1,15 @@
 # coding=utf-8
 import copy
 from vehicle import vehicle
-import time
-import datetime
-import sys
 
 # hasher, nog niet geïmplementeerd maar misschien bruikbaar
-def hasher(vehicles):
-    hashed = ''
-    for i in vehicles:
-        a = str(i.id)
-        b = str(i.row_v)
-        c = str(i.col_v)
-        d = str(i.length)
-        e = str(i.orientation)
-        hashed += a + b + c + d + e
+def hasher(table):
+    hashed = 0
+    for i in table:
+        for j in i:
+            if j != ' ':
+                hashed += 1
+            hashed *= 10
     return hashed
 
 # age_compare, check de eigenschappen van twee vehicles en de id, als match dan return true
@@ -41,7 +36,7 @@ def game_win(table):
 # counter op levels of 'lagen' bij te houden
 def myfunc():
     myfunc.counter += 1
-    print "Level: ", myfunc.counter
+    print "Node: ", myfunc.counter
 
 # verwijdert oude auto van lijst en zet nieuwe auto erin
 def add_new_car(vehicles, old_car, new_car):
@@ -63,9 +58,6 @@ def table_retriever(width, vehicles):
             vehicle.age = 'o'
         if game_win(table):
             print "You Win!"
-            end_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-            print end_time
-            sys.exit()
         return table
 
 def board_vehicles(vehicles):
@@ -96,20 +88,3 @@ def all_possible_vehicles(vehicles, width):
                 positions.append(vehicle(x.id, x.row_v, i, x.orientation, x.board_size, x.age))
         vehicle_dict[x.id] = positions
     return vehicle_dict
-
-def find_blocking_cars(vehicle_array, width):
-
-    blocking_cars = 0
-    board = table_retriever(width, vehicle_array)
-    for i in range(width):
-        for j in range(width):
-            if board[i][j] == 'T':
-                taxi_row = i
-                taxi_col = j
-    for i in range((width - taxi_col - 2), width):
-            if board[taxi_row][i] != ' ':
-                blocking_cars += 1
-    return blocking_cars
-
-def sort_scores(array):
-    return sorted(array, key = lambda tup: tup[1])
