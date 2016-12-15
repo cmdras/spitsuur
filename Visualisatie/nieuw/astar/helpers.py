@@ -138,6 +138,9 @@ def find_free_path(vehicle_array, width):
                 break
     return free_paths
 
-
-def sort_scores(array):
-    return sorted(array, key = lambda tup: tup[1])
+def node_traversal(node):
+    nodes = []
+    while node.parent != None:
+        nodes.append(node)
+        node = node.parent
+    return nodes
