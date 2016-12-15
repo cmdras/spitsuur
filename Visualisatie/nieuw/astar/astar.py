@@ -48,7 +48,7 @@ class Board(object):
         return table
 
     def move_vehicle(self):
-        self.x = self.table_retriever()
+        self.x = table_retriever(self.width, self.vehicles)
         table_queue = self.x
         for car in self.vehicles:
             if car.orientation == 'hor':
@@ -90,7 +90,7 @@ class Board(object):
                             yield children
 
 
-def astar_solver(table, all_positions):
+def astar_solver_blocking(table, width):
     start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     print start_time
     print "**********"
@@ -102,12 +102,7 @@ def astar_solver(table, all_positions):
     while openset:
         current = min(openset, key=lambda o: o.score)
         x = deque()
-        x.append(table_retriever(6, current.value))
-
-        print "------------------"
-        for i in x:
-            print i
-        print "------------------"
+        x.append(table_retriever(width, current.value))
         if game_win2(current.value):
             print "You win!"
             break
@@ -118,16 +113,47 @@ def astar_solver(table, all_positions):
         table.vehicles = current.value
         children = table.move_vehicle()
         for child in children:
-            y = table_retriever(6, child)
+            y = table_retriever(width, child)
             if y in closedset:
-                print "child already in archive"
                 continue
             node = Node(child)
-            node.score = find_blocking_cars(node.value, 6)
+            node.score = find_blocking_cars(node.value, width)
             node.parent = current
             openset.add(node)
             closedset.append(y)
 
+
+def astar_solver_Free(table, width):
+    start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+    print start_time
+    print "**********"
+    openset = set()
+    closedset = []
+
+    current = Node(table.vehicles)
+    openset.add(current)
+    while openset:
+        current = min(openset, key=lambda o: o.score)
+        x = deque()
+        x.append(table_retriever(width, current.value))
+        if game_win2(current.value):
+            print "You win!"
+            break
+        openset.remove(current)
+
+        # maak deque hiervan
+        closedset.append(x)
+        table.vehicles = current.value
+        children = table.move_vehicle()
+        for child in children:
+            y = table_retriever(width, child)
+            if y in closedset:
+                continue
+            node = Node(child)
+            node.score = find_free_path(node.value, width)
+            node.parent = current
+            openset.add(node)
+            closedset.append(y)
 
 def game_win2(vehicle_array):
     for vehicle in vehicle_array:
@@ -169,9 +195,13 @@ def start_rushhour():
                 board_size = c
             break
     board = Board(board_size, game)
-    z = board_vehicles(board.vehicles)
     board.all_positions = all_possible_vehicles(board.vehicles, board_size)
-    astar_solver(board, board.all_positions)
+    solver = str(raw_input("which solver?: "))
+    if solver == "block":
+        astar_solver_blocking(board, board_size)
+    elif solver == "free":
+        astar_solver_Free(board, board_size)
+
     # print board.x
 
 
