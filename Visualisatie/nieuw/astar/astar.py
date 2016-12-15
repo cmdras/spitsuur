@@ -17,28 +17,10 @@ TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',
 
 # creeer een class genaamd Queue met de volgende methods:__init__, insert en remove(pop)
 class Node:
-	def __init__(self, value):
-		self.value = value
-		self.parent = None
-		self.score = 0
-
-
-class Queue:
-    """ Represents a queue. """
-    def __init__(self):
-        self.items = []
-
-    def insert(self, other):
-        self.items.append(other)
-
-    def pop(self):
-        if self.items is []:
-            return 'The queue is empty'
-        else:
-            return self.items.pop()
-
-    def dump(self):
-        self.items = []
+    def __init__(self, value):
+        self.value = value
+        self.parent = None
+        self.score = 0
 
 
 class Board(object):
@@ -73,7 +55,7 @@ class Board(object):
                 if car.col_v - 1 >= 0 and table_queue[car.row_v][car.col_v - 1] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.col_v - 1 == new_car.col_v:
-                        # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.deepcopy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
@@ -82,7 +64,7 @@ class Board(object):
                 if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.col_v + 1 == new_car.col_v:
-                    # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.copy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
@@ -92,7 +74,7 @@ class Board(object):
                 if car.row_v - 1 >= 0 and table_queue[car.row_v - 1][car.col_v] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.row_v - 1 == new_car.row_v:
-                        # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.copy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
@@ -101,85 +83,12 @@ class Board(object):
                 if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.row_v + 1 == new_car.row_v:
-                        # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.copy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
                             yield children
 
-    def move_vehicle2(self):
-        self.x = self.table_retriever()
-        table_queue = self.x
-        child_array =[]
-        for car in self.vehicles:
-            if car.orientation == 'hor':
-                if car.col_v - 1 >= 0 and table_queue[car.row_v][car.col_v - 1] == ' ':
-                    for new_car in self.all_positions[car.id]:
-                        if car.col_v - 1 == new_car.col_v:
-                        # vanaf hieronder kan in eigen functie
-                            children = copy.deepcopy(self.vehicles)
-                            children.remove(car)
-                            children.append(new_car)
-                            child_array.append(children)
-
-                if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
-                    for new_car in self.all_positions[car.id]:
-                        if car.col_v + 1 == new_car.col_v:
-                    # vanaf hieronder kan in eigen functie
-                            children = copy.copy(self.vehicles)
-                            children.remove(car)
-                            children.append(new_car)
-                            child_array.append(children)
-
-            if car.orientation == 'ver':
-                if car.row_v - 1 >= 0 and table_queue[car.row_v - 1][car.col_v] == ' ':
-                    for new_car in self.all_positions[car.id]:
-                        if car.row_v - 1 == new_car.row_v:
-                        # vanaf hieronder kan in eigen functie
-                            children = copy.copy(self.vehicles)
-                            children.remove(car)
-                            children.append(new_car)
-                            child_array.append(children)
-
-                if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
-                    for new_car in self.all_positions[car.id]:
-                        if car.row_v + 1 == new_car.row_v:
-                        # vanaf hieronder kan in eigen functie
-                            children = copy.copy(self.vehicles)
-                            children.remove(car)
-                            children.append(new_car)
-                            child_array.append(children)
-        return child_array                       
-
-
-def solver(table, z, all_positions):
-    myfunc.counter = 0
-    table.all_positions = all_positions
-    queue = Queue()
-    archive = Queue()
-    goal = 1
-    pre = table.move_vehicle()
-    archive.insert(table.vehicles)
-    for i in pre:
-        queue.insert((i, find_blocking_cars(i,6)))
-    for j in queue.items:
-        table.vehicles = j[0]
-        archive.insert(queue.pop())
-        #if goal == 1:
-        #    if prune(table, queue):
-        #        queue.insert(j)
-        #        goal = 0
-        pre = table.move_vehicle()
-        temp = queue.items[1:]
-        for k in pre:
-            if k not in archive.items:
-                temp.append((k, find_blocking_cars(k, 6)))
-        temp = sort_scores(temp)
-        queue.items = queue.items[:1]
-        queue.items += temp
-        print queue.items
-
-    myfunc()
 
 def astar_solver(table, all_positions):
     start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
@@ -191,10 +100,10 @@ def astar_solver(table, all_positions):
     current = Node(table.vehicles)
     openset.add(current)
     while openset:
-        current = min(openset, key = lambda o:o.score)
+        current = min(openset, key=lambda o: o.score)
         x = deque()
         x.append(table_retriever(6, current.value))
-        
+
         print "------------------"
         for i in x:
             print i
@@ -203,7 +112,7 @@ def astar_solver(table, all_positions):
             print "You win!"
             break
         openset.remove(current)
-        
+
         # maak deque hiervan
         closedset.append(x)
         table.vehicles = current.value
@@ -219,10 +128,11 @@ def astar_solver(table, all_positions):
             openset.add(node)
             closedset.append(y)
 
+
 def game_win2(vehicle_array):
     for vehicle in vehicle_array:
-    	if vehicle.id == "T" and vehicle.col_v == 4:
-    		return True
+        if vehicle.id == "T" and vehicle.col_v == 4:
+            return True
     return False
 
 
@@ -236,7 +146,7 @@ def start_vehicles(board_level, width):
         vehicle_row_v = j[1]
         vehicle_col_v = j[2]
         vehicle_or = j[3]
-        vehicles.append(vehicle(vehicle_id, int(vehicle_row_v), int(vehicle_col_v), vehicle_or, width, 'o'))
+        vehicles.append(vehicle(vehicle_id, int(vehicle_row_v), int(vehicle_col_v), vehicle_or, width))
     return vehicles
 
 
@@ -262,6 +172,7 @@ def start_rushhour():
     z = board_vehicles(board.vehicles)
     board.all_positions = all_possible_vehicles(board.vehicles, board_size)
     astar_solver(board, board.all_positions)
-    #print board.x
+    # print board.x
+
 
 start_rushhour()
