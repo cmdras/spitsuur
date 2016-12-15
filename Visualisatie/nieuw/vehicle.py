@@ -8,10 +8,9 @@ TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',
 import collections
 
 class vehicle(object):
-    def __init__(self, id, row_v, col_v, orientation, board_size, age):
+    def __init__(self, id, row_v, col_v, orientation, board_size):
         """ check is car if exists and assigns id, length and color"""
         self.board_size = board_size
-        self.age = age
         if id[0] in CAR_ID:
             self.id = id
             self.length = 2
@@ -39,12 +38,12 @@ class vehicle(object):
 
         if orientation == 'hor':
             self.orientation = orientation
-            row_v_end = self.row_v 
+            row_v_end = self.row_v
             col_v_end = self.col_v + (self.length - 1)
         elif orientation == 'ver':
             self.orientation = orientation
             row_v_end = self.row_v + (self.length - 1)
-            col_v_end = self.col_v 
+            col_v_end = self.col_v
         else:
             raise ValueError('Invalid orientation {0}'.format(orientation))
 
@@ -61,45 +60,3 @@ class vehicle(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
-
-a = vehicle("A", 0, 3, "ver", 6, "o")
-b = vehicle("B", 0, 4, "ver", 6, "o")
-o = vehicle("C", 2, 4, "hor", 6, "o")
-c = [a, b, o]
-d = vehicle("A", 0, 3, "ver", 6, "o")
-e = vehicle("A", 0, 4, "ver", 6, "o")
-g = [d, e]
-
-x = [b, o, a]
-
-
-def board_vehicles(vehicles):
-    string = []    
-    for i in vehicles:
-        string.append(i.id)
-
-    return string
-z = board_vehicles(c)
-
-
-def vehicles_to_string(vehicles, board_vehicles):
-    string = ""
-    for i in range(len(board_vehicles)):
-        for j in vehicles:
-            if board_vehicles[i] == j.id:
-                string += str(j.row_v)
-                string += str(j.col_v)
-    return string
-
-vehiclestring1 = vehicles_to_string(c, z)
-vehiclestring2 = vehicles_to_string(x, z)
-
-
-
-
-print vehiclestring1
-print vehiclestring2
-print vehiclestring1 == vehiclestring2
-
-
-
