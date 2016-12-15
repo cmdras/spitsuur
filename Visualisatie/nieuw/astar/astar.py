@@ -91,8 +91,7 @@ class Board(object):
 
 
 def astar_solver_blocking(table, width):
-    start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    print start_time
+    start_time = datetime.datetime.now()
     print "**********"
     openset = set()
     closedset = []
@@ -105,6 +104,15 @@ def astar_solver_blocking(table, width):
         x.append(table_retriever(width, current.value))
         if game_win2(current.value):
             print "You win!"
+            end_time = datetime.datetime.now()
+            elapsed = end_time - start_time
+            print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
+            winning_moves = node_traversal(current)
+            for node in reversed(winning_moves):
+                j = table_retriever(width, node.value)
+                for x in j:
+                    print x
+                print ""
             break
         openset.remove(current)
 
@@ -124,8 +132,7 @@ def astar_solver_blocking(table, width):
 
 
 def astar_solver_Free(table, width):
-    start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    print start_time
+    start_time = datetime.datetime.now()
     print "**********"
     openset = set()
     closedset = []
@@ -138,6 +145,15 @@ def astar_solver_Free(table, width):
         x.append(table_retriever(width, current.value))
         if game_win2(current.value):
             print "You win!"
+            end_time = datetime.datetime.now()
+            elapsed = end_time - start_time
+            print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
+            winning_moves = node_traversal(current)
+            for node in reversed(winning_moves):
+                j = table_retriever(width, node.value)
+                for x in j:
+                    print x
+                print ""
             break
         openset.remove(current)
 
