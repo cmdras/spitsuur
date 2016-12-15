@@ -2,9 +2,10 @@ import Tkinter
 import itertools
 import copy
 import sys
-from collections import deque
+import time
 
 from vehicle import vehicle
+from collections import deque
 from helpers import *
 
 CAR_ID = {'A': 'cyan2', 'B': 'CadetBlue', 'C': 'RoyalBlue1',
@@ -14,15 +15,22 @@ TRUCKS_ID = {'E': 'MediumPurple1', 'F': 'yellow2', 'Fa': 'yellow2',
              'G': 'gold', 'H': 'orange', 'I': 'gray64'}
 
 
+# creeer een class genaamd Queue met de volgende methods:__init__, insert en remove(pop)
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.parent = None
+        self.score = 0
+
+
 class Board(object):
     def __init__(self, width, board_level):
         self.width = width
         self.height = width
         board_level = "vehicles/" + board_level + ".txt"
         self.vehicles = start_vehicles(board_level, width)
-        self.all_positions = []
+        self.all_positions = {}
         self.x = ''
-
 
     def table_retriever(self):
         table = [[' ' for i in xrange(self.width)] for i in xrange(self.width)]
@@ -34,18 +42,21 @@ class Board(object):
             elif vehicle.orientation == 'ver':
                 for i in range(vehicle.length):
                     table[row_v + i][col_v] = vehicle.id
+        if game_win(table):
+            print "You Win!"
+            sys.exit()
         return table
 
     def move_vehicle(self):
-        self.x = self.table_retriever()
+        self.x = table_retriever(self.width, self.vehicles)
         table_queue = self.x
         for car in self.vehicles:
             if car.orientation == 'hor':
                 if car.col_v - 1 >= 0 and table_queue[car.row_v][car.col_v - 1] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.col_v - 1 == new_car.col_v:
-                        # vanaf hieronder kan in eigen functie
-                            children = copy.copy(self.vehicles)
+                            # vanaf hieronder kan in eigen functie
+                            children = copy.deepcopy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
                             yield children
@@ -53,7 +64,7 @@ class Board(object):
                 if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.col_v + 1 == new_car.col_v:
-                    # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.copy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
@@ -63,7 +74,7 @@ class Board(object):
                 if car.row_v - 1 >= 0 and table_queue[car.row_v - 1][car.col_v] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.row_v - 1 == new_car.row_v:
-                        # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.copy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
@@ -72,50 +83,60 @@ class Board(object):
                 if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.row_v + 1 == new_car.row_v:
-                        # vanaf hieronder kan in eigen functie
+                            # vanaf hieronder kan in eigen functie
                             children = copy.copy(self.vehicles)
                             children.remove(car)
                             children.append(new_car)
                             yield children
 
 
-def solver(table, all_positions):
-    myfunc.counter = 0
-    goal = 0
-    table.all_positions = all_positions
-    queue = deque()
-    archive = deque()
-    pre = table.move_vehicle()
-    archive.append(table.x)
-    for i in pre:
-        queue.append(i)
-    while True:
-        table.vehicles = queue.pop()
-        archive.append(table.x)
-#        if goal == 0 and table.x[2][2] == 'T':
-#            queue.clear()
-#            goal = 1
-#            print "Queue DUMPED"
-#        if goal == 1 and table.x[2][1] == 'T':
-#            queue.clear()
-#            goal = 2
-#            print "Queue DUMPED"
-#        if goal == 2 and table.x[2][0] == 'T':
-#            queue.clear()
-#            goal = 3
-#            print "Queue DUMPED"
-        pre = table.move_vehicle()
-        for k in pre:
-            if 'T25hor' in k:
-                game_win()
-            if k not in queue and k not in archive:
-                queue.appendleft(k)
-        myfunc()
+def astar_solver(table, width, a):
+    i  = 0
+    start_time = datetime.datetime.now()
+    print "**********"
+    openset = set()
+    closedset = deque()
+    x = []
+    current = Node(table.vehicles)
+    openset.add(current)
+    while openset:
+        current = openset.pop()
+        x.append(table_retriever(width, current.value))
+        if game_win2(current.value):
+            print "You win!"
+            end_time = datetime.datetime.now()
+            elapsed = end_time - start_time
+            print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
+            winning_moves = node_traversal(current)
+            for node in reversed(winning_moves):
+                j = table_retriever(width, node.value)
+                for x in j:
+                    print x
+                print ""
+            print "number of moves: " + str(len(winning_moves))
+            break
+
+        # maak deque hiervan
+        closedset.append(x)
+        table.vehicles = current.value
+        children = table.move_vehicle()
+        for child in children:
+            y = table_retriever(width, child)
+            if y in closedset:
+                continue
+            node = Node(child)
+            node.parent = current
+            openset.add(node)
+            closedset.append(y)
+            i += 1
+            print i
 
 
-def game_win():
-    print "You Win!"
-    sys.exit()
+def game_win2(vehicle_array):
+    for vehicle in vehicle_array:
+        if vehicle.id == "T" and vehicle.col_v == 4:
+            return True
+    return False
 
 
 def start_vehicles(board_level, width):
@@ -128,7 +149,7 @@ def start_vehicles(board_level, width):
         vehicle_row_v = j[1]
         vehicle_col_v = j[2]
         vehicle_or = j[3]
-        vehicles.append(vehicle(vehicle_id, int(vehicle_row_v), int(vehicle_col_v), vehicle_or, width, 'o'))
+        vehicles.append(vehicle(vehicle_id, int(vehicle_row_v), int(vehicle_col_v), vehicle_or, width))
     return vehicles
 
 
@@ -151,9 +172,12 @@ def start_rushhour():
                 board_size = c
             break
     board = Board(board_size, game)
-    z = board_vehicles(board.vehicles)
-    all_positions = all_possible_vehicles(board.vehicles, board_size)
-    solver(board, all_positions)
-    print board.x
+    board.all_positions = all_possible_vehicles(board.vehicles, board_size)
+    solver = str(raw_input("which solver?: "))
+    astar_solver(board, board_size, solver)
+
+
+    # print board.x
+
 
 start_rushhour()
