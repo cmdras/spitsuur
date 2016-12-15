@@ -54,9 +54,6 @@ class vehicle(object):
 
         #print "Vehicle is oke!"
 
-    def __repr__(self):
-        return str(self.id) + str(self.row_v) + str(self.col_v) + str(self.orientation)
-
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
@@ -93,13 +90,3 @@ def vehicles_to_string(vehicles, board_vehicles):
                 string += str(j.row_v)
                 string += str(j.col_v)
     return string
-
-vehiclestring1 = vehicles_to_string(c, z)
-vehiclestring2 = vehicles_to_string(x, z)
-
-
-
-
-print vehiclestring1
-print vehiclestring2
-print vehiclestring1 == vehiclestring2
