@@ -66,11 +66,6 @@ def table_retriever(width, vehicles):
             elif vehicle.orientation == 'ver':
                 for i in range(vehicle.length):
                     table[row_v + i][col_v] = vehicle.id
-        if game_win(table):
-            print "You Win!"
-            end_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-            print end_time
-            sys.exit()
         return table
 
 
@@ -114,6 +109,7 @@ def find_blocking_cars(vehicle_array, width):
             if board[i][j] == 'T':
                 taxi_row = i
                 taxi_col = j
+                break
     for i in range((width - taxi_col - 2), width):
             if board[taxi_row][i] != ' ':
                 blocking_cars += 1
@@ -138,9 +134,70 @@ def find_free_path(vehicle_array, width):
                 break
     return free_paths
 
+def taxi_priority(vehicle_array, width):
+
+    blocking_score = find_free_path(vehicle_array, width)
+    board = table_retriever(width, vehicle_array)
+    for i in range(width):
+        for j in range(width):
+            if board[i][j] == 'T':
+                taxi_row = i
+                taxi_col = j
+    if (taxi_col+2) < width and (taxi_col-1) >= 0:
+        if (board[taxi_row][taxi_col + 2] != ' '):
+            heuristic = -1
+            return heuristic
+    return blocking_score
+
+
 def node_traversal(node):
     nodes = []
     while node.parent != None:
         nodes.append(node)
         node = node.parent
     return nodes
+
+def move_vehicle(vehicles, width, all_positions):
+        table_queue = table_retriever(width, vehicles)
+        for car in vehicles:
+            if car.orientation == 'hor':
+                if car.col_v - 1 >= 0 and table_queue[car.row_v][car.col_v - 1] == ' ':
+                    for new_car in all_positions[car.id]:
+                        if car.col_v - 1 == new_car.col_v:
+                            # vanaf hieronder kan in eigen functie
+                            children = copy.deepcopy(vehicles)
+                            children.remove(car)
+                            children.append(new_car)
+                            yield children
+
+                if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
+                    for new_car in all_positions[car.id]:
+                        if car.col_v + 1 == new_car.col_v:
+                            # vanaf hieronder kan in eigen functie
+                            children = copy.copy(vehicles)
+                            children.remove(car)
+                            children.append(new_car)
+                            yield children
+
+            if car.orientation == 'ver':
+                if car.row_v - 1 >= 0 and table_queue[car.row_v - 1][car.col_v] == ' ':
+                    for new_car in all_positions[car.id]:
+                        if car.row_v - 1 == new_car.row_v:
+                            # vanaf hieronder kan in eigen functie
+                            children = copy.copy(vehicles)
+                            children.remove(car)
+                            children.append(new_car)
+                            yield children
+
+                if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
+                    for new_car in all_positions[car.id]:
+                        if car.row_v + 1 == new_car.row_v:
+                            # vanaf hieronder kan in eigen functie
+                            children = copy.copy(vehicles)
+                            children.remove(car)
+                            children.append(new_car)
+                            yield children
+
+def children_score(vehicle_array, width, all_positions):
+    children = move_vehicle(vehicle_array, width, all_positions)
+    return sum(1 for x in children)
