@@ -61,7 +61,7 @@ class Board(object):
                             children.append(new_car)
                             yield children
 
-                if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
+                if car.col_v + car.length <= (self.width-1) and table_queue[car.row_v][car.col_v + car.length] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.col_v + 1 == new_car.col_v:
                             # vanaf hieronder kan in eigen functie
@@ -80,7 +80,7 @@ class Board(object):
                             children.append(new_car)
                             yield children
 
-                if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
+                if car.row_v + car.length <= (self.width-1) and table_queue[car.row_v + car.length][car.col_v] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.row_v + 1 == new_car.row_v:
                             # vanaf hieronder kan in eigen functie
@@ -91,50 +91,53 @@ class Board(object):
 
 
 def astar_solver(table, width, a):
-    i  = 0
+    i = 0
     start_time = datetime.datetime.now()
     print "**********"
-    openset = set()
-    closedset = deque()
-    x = []
+    openset = deque()
+    closedset = set()
     current = Node(table.vehicles)
-    openset.add(current)
+    openset.append(current)
     while openset:
         current = openset.pop()
-        x.append(table_retriever(width, current.value))
+        x = (table_retriever(width, current.value))
         if game_win2(current.value):
             print "You win!"
             end_time = datetime.datetime.now()
             elapsed = end_time - start_time
             print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
             winning_moves = node_traversal(current)
+            f = open('file.txt', 'w')
             for node in reversed(winning_moves):
                 j = table_retriever(width, node.value)
                 for x in j:
-                    print x
-                print ""
+                    f.write(repr(x))
+                    f.write("\n")
+                f.write("--------------------\n")
+            f.close()
             print "number of moves: " + str(len(winning_moves))
             break
 
         # maak deque hiervan
-        closedset.append(x)
+        closedset.add(repr(x))
         table.vehicles = current.value
         children = table.move_vehicle()
         for child in children:
             y = table_retriever(width, child)
+            y = repr(y)
             if y in closedset:
                 continue
             node = Node(child)
             node.parent = current
-            openset.add(node)
-            closedset.append(y)
+            openset.appendleft(node)
+            closedset.add(y)
             i += 1
             print i
 
 
 def game_win2(vehicle_array):
     for vehicle in vehicle_array:
-        if vehicle.id == "T" and vehicle.col_v == 4:
+        if vehicle.id == "T" and vehicle.col_v == 7:
             return True
     return False
 
