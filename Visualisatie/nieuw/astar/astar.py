@@ -61,7 +61,7 @@ class Board(object):
                             children.append(new_car)
                             yield children
 
-                if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
+                if car.col_v + car.length <= self.width - 1 and table_queue[car.row_v][car.col_v + car.length] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.col_v + 1 == new_car.col_v:
                             # vanaf hieronder kan in eigen functie
@@ -80,7 +80,7 @@ class Board(object):
                             children.append(new_car)
                             yield children
 
-                if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
+                if car.row_v + car.length <= self.width - 1 and table_queue[car.row_v + car.length][car.col_v] == ' ':
                     for new_car in self.all_positions[car.id]:
                         if car.row_v + 1 == new_car.row_v:
                             # vanaf hieronder kan in eigen functie
@@ -98,11 +98,21 @@ def astar_solver_blocking(table, width):
 
     current = Node(table.vehicles)
     openset.add(current)
+    closedset.append(table_retriever(width, current.value))
     while openset:
         current = min(openset, key=lambda o: o.score)
         x = deque()
-        x.append(table_retriever(width, current.value))
-        if game_win2(current.value):
+        x.append(table_retriever(width, current.value))     
+
+        print "----------------"
+        print ""
+        for i in x:
+            for y in i:
+                print y
+        print ""
+        print "----------------"
+
+        if game_win2(current.value, width):
             print "You win!"
             end_time = datetime.datetime.now()
             elapsed = end_time - start_time
@@ -113,13 +123,15 @@ def astar_solver_blocking(table, width):
                 for x in j:
                     print x
                 print ""
+            print "Number of moves: " + str(len(winning_moves))
             break
+        
         openset.remove(current)
-
-        # maak deque hiervan
-        closedset.append(x)
+        if x not in closedset:
+            closedset.append(x)
         table.vehicles = current.value
         children = table.move_vehicle()
+
         for child in children:
             y = table_retriever(width, child)
             if y in closedset:
@@ -129,7 +141,6 @@ def astar_solver_blocking(table, width):
             node.parent = current
             openset.add(node)
             closedset.append(y)
-
 
 def astar_solver_Free(table, width):
     start_time = datetime.datetime.now()
@@ -143,7 +154,8 @@ def astar_solver_Free(table, width):
         current = min(openset, key=lambda o: o.score)
         x = deque()
         x.append(table_retriever(width, current.value))
-        if game_win2(current.value):
+        
+        if game_win2(current.value, width):
             print "You win!"
             end_time = datetime.datetime.now()
             elapsed = end_time - start_time
@@ -154,6 +166,7 @@ def astar_solver_Free(table, width):
                 for x in j:
                     print x
                 print ""
+            print "Number of moves: " + str(len(winning_moves))
             break
         openset.remove(current)
 
@@ -171,9 +184,91 @@ def astar_solver_Free(table, width):
             openset.add(node)
             closedset.append(y)
 
-def game_win2(vehicle_array):
+def astar_solver_taxi_priority(table, width):
+    start_time = datetime.datetime.now()
+    print "**********"
+    openset = set()
+    closedset = []
+
+    current = Node(table.vehicles)
+    openset.add(current)
+    closedset.append(table_retriever(width, current.value))
+    while openset:
+        current = min(openset, key=lambda o: o.score)
+        x = deque()
+        x.append(table_retriever(width, current.value))
+        if game_win2(current.value, width):
+            print "You win!"
+            end_time = datetime.datetime.now()
+            elapsed = end_time - start_time
+            print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
+            winning_moves = node_traversal(current)
+            for node in reversed(winning_moves):
+                j = table_retriever(width, node.value)
+                for x in j:
+                    print x
+                print ""
+            print "Number of moves: " + str(len(winning_moves))
+            break
+        openset.remove(current)
+        if x not in closedset:
+            closedset.append(x)
+        table.vehicles = current.value
+        children = table.move_vehicle()
+        for child in children:
+            y = table_retriever(width, child)
+            if y in closedset:
+                continue
+            node = Node(child)
+            node.score = taxi_priority(node.value, width)
+            node.parent = current
+            openset.add(node)
+            closedset.append(y)
+
+def astar_solver_children(table, width, all_positions):
+    start_time = datetime.datetime.now()
+    print "**********"
+    openset = set()
+    closedset = []
+
+    current = Node(table.vehicles)
+    openset.add(current)
+    closedset.append(table_retriever(width, current.value))
+    while openset:
+        current = max(openset, key=lambda o: o.score)
+        x = deque()
+        x.append(table_retriever(width, current.value))
+        if game_win2(current.value, width):
+            print "You win!"
+            end_time = datetime.datetime.now()
+            elapsed = end_time - start_time
+            print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
+            winning_moves = node_traversal(current)
+            for node in reversed(winning_moves):
+                j = table_retriever(width, node.value)
+                for x in j:
+                    print x
+                print ""
+            print "Number of moves: " + str(len(winning_moves))
+            break
+        openset.remove(current)
+        if x not in closedset:
+            closedset.append(x)
+        table.vehicles = current.value
+        children = table.move_vehicle()
+        for child in children:
+            y = table_retriever(width, child)
+            if y in closedset:
+                continue
+            node = Node(child)
+            node.score = children_score(child, width, all_positions)
+            node.parent = current
+            openset.add(node)
+            closedset.append(y)
+
+def game_win2(vehicle_array, width):
     for vehicle in vehicle_array:
-        if vehicle.id == "T" and vehicle.col_v == 4:
+        if vehicle.id == "T" and vehicle.col_v == width - 2:
             return True
     return False
 
@@ -211,14 +306,18 @@ def start_rushhour():
                 board_size = c
             break
     board = Board(board_size, game)
-    board.all_positions = all_possible_vehicles(board.vehicles, board_size)
+    all_positions = all_possible_vehicles(board.vehicles, board_size)
+    board.all_positions = all_positions
     solver = str(raw_input("which solver?: "))
     if solver == "block":
         astar_solver_blocking(board, board_size)
     elif solver == "free":
         astar_solver_Free(board, board_size)
-
-    # print board.x
+    elif solver == "taxi":
+        astar_solver_taxi_priority(board, board_size)
+    elif solver == "children":
+        astar_solver_children(board, board_size, all_positions)
 
 
 start_rushhour()
+print "Exited"
