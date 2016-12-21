@@ -91,6 +91,7 @@ class Board(object):
 
 
 def astar_solver_blocking(table, width):
+    visited = 0
     start_time = datetime.datetime.now()
     print "**********"
     openset = set()
@@ -104,26 +105,23 @@ def astar_solver_blocking(table, width):
         x = deque()
         x.append(table_retriever(width, current.value))     
 
-        print "----------------"
-        print ""
-        for i in x:
-            for y in i:
-                print y
-        print ""
-        print "----------------"
-
         if game_win2(current.value, width):
             print "You win!"
             end_time = datetime.datetime.now()
             elapsed = end_time - start_time
             print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
             winning_moves = node_traversal(current)
+            f = open('file_block.txt', 'w')
             for node in reversed(winning_moves):
                 j = table_retriever(width, node.value)
                 for x in j:
-                    print x
-                print ""
-            print "Number of moves: " + str(len(winning_moves))
+                    f.write(repr(x))
+                    f.write("\n")
+                f.write("--------------------\n")
+            f.write(str(visited))
+
+            f.close()
+            print "number of moves: " + str(len(winning_moves))
             break
         
         openset.remove(current)
@@ -141,8 +139,11 @@ def astar_solver_blocking(table, width):
             node.parent = current
             openset.add(node)
             closedset.append(y)
+            visited += 1
+            print visited
 
 def astar_solver_Free(table, width):
+    visited = 0
     start_time = datetime.datetime.now()
     print "**********"
     openset = set()
@@ -161,12 +162,17 @@ def astar_solver_Free(table, width):
             elapsed = end_time - start_time
             print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
             winning_moves = node_traversal(current)
+            f = open('file_free.txt', 'w')
             for node in reversed(winning_moves):
                 j = table_retriever(width, node.value)
                 for x in j:
-                    print x
-                print ""
-            print "Number of moves: " + str(len(winning_moves))
+                    f.write(repr(x))
+                    f.write("\n")
+                f.write("--------------------\n")
+            f.write(str(visited))
+
+            f.close()
+            print "number of moves: " + str(len(winning_moves))
             break
         openset.remove(current)
 
@@ -185,6 +191,7 @@ def astar_solver_Free(table, width):
             closedset.append(y)
 
 def astar_solver_taxi_priority(table, width):
+    visited = 0
     start_time = datetime.datetime.now()
     print "**********"
     openset = set()
@@ -203,12 +210,17 @@ def astar_solver_taxi_priority(table, width):
             elapsed = end_time - start_time
             print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
             winning_moves = node_traversal(current)
+            f = open('file_taxi.txt', 'w')
             for node in reversed(winning_moves):
                 j = table_retriever(width, node.value)
                 for x in j:
-                    print x
-                print ""
-            print "Number of moves: " + str(len(winning_moves))
+                    f.write(repr(x))
+                    f.write("\n")
+                f.write("--------------------\n")
+            f.write(str(visited))
+
+            f.close()
+            print "number of moves: " + str(len(winning_moves))
             break
         openset.remove(current)
         if x not in closedset:
@@ -226,6 +238,7 @@ def astar_solver_taxi_priority(table, width):
             closedset.append(y)
 
 def astar_solver_children(table, width, all_positions):
+    visited = 0
     start_time = datetime.datetime.now()
     print "**********"
     openset = set()
@@ -244,12 +257,17 @@ def astar_solver_children(table, width, all_positions):
             elapsed = end_time - start_time
             print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
             winning_moves = node_traversal(current)
+            f = open('file_children.txt', 'w')
             for node in reversed(winning_moves):
                 j = table_retriever(width, node.value)
                 for x in j:
-                    print x
-                print ""
-            print "Number of moves: " + str(len(winning_moves))
+                    f.write(repr(x))
+                    f.write("\n")
+                f.write("--------------------\n")
+            f.write(str(visited))
+
+            f.close()
+            print "number of moves: " + str(len(winning_moves))
             break
         openset.remove(current)
         if x not in closedset:
