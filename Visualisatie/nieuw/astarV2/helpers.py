@@ -5,41 +5,12 @@ import time
 import datetime
 import sys
 
-
-# hasher, nog niet geïmplementeerd maar misschien bruikbaar
-def hasher(vehicles):
-    hashed = ''
-    for i in vehicles:
-        a = str(i.id)
-        b = str(i.row_v)
-        c = str(i.col_v)
-        d = str(i.length)
-        e = str(i.orientation)
-        hashed += a + b + c + d + e
-    return hashed
-
-
-# age_compare, check de eigenschappen van twee vehicles en de id, als match dan return true
-def age_compare(list1, list2):
-    for i in list1:
-        if i.age == 'n':
-            a = i.id
-        else:
-            return False
-    for j in list2:
-        if j.age == 'n':
-            b = j.id
-        else:
-            return False
-    return a == b
-
-
 # game_win checkt table op winconditie
-def game_win(table):
-    if table[2][5] == "T":
-        return True
-    else:
-        return False
+def game_win(vehicle_array, width):
+    for vehicle in vehicle_array:
+        if vehicle.id == "T" and vehicle.col_v == width - 2:
+            return True
+    return False
 
 
 # counter op levels of 'lagen' bij te houden
@@ -55,7 +26,7 @@ def add_new_car(vehicles, old_car, new_car):
     children.append(new_car)
     return children
 
-
+# returnt een spelbord in de vorm van een matrix
 def table_retriever(width, vehicles):
         table = [[' ' for i in xrange(width)] for i in xrange(width)]
         for vehicle in vehicles:
@@ -68,25 +39,8 @@ def table_retriever(width, vehicles):
                     table[row_v + i][col_v] = vehicle.id
         return table
 
-
-def board_vehicles(vehicles):
-    string = []
-    for i in vehicles:
-        string.append(i.id)
-
-    return string
-
-
-def vehicles_to_string(vehicles, board_vehicles):
-    string = ""
-    for i in range(len(board_vehicles)):
-        for j in vehicles:
-            if board_vehicles[i] == j.id:
-                string += str(j.row_v)
-                string += str(j.col_v)
-    return string
-
-
+# returnt alle mogelike posities van elke ingeladen vehicle
+# wordt gebruikt door move_vehicle()
 def all_possible_vehicles(vehicles, width):
     vehicle_dict = {}
     for x in vehicles:
@@ -100,7 +54,7 @@ def all_possible_vehicles(vehicles, width):
         vehicle_dict[x.id] = positions
     return vehicle_dict
 
-
+# heuristiek voor alle vehicles voor de taxi
 def find_blocking_cars(vehicle_array, width):
     blocking_cars = 0
     board = table_retriever(width, vehicle_array)
@@ -115,7 +69,7 @@ def find_blocking_cars(vehicle_array, width):
                 blocking_cars += 1
     return blocking_cars
 
-
+# heuristiek voor het zoeken van 1 a 2 vrije spaces voor de taxi
 def find_free_path(vehicle_array, width):
     free_paths = 0
     board = table_retriever(width, vehicle_array)
@@ -134,6 +88,7 @@ def find_free_path(vehicle_array, width):
                 break
     return free_paths
 
+# heuristiek voor het zoeken van 1 vrije space voor taxi
 def taxi_priority(vehicle_array, width):
 
     blocking_score = find_free_path(vehicle_array, width)
@@ -150,6 +105,7 @@ def taxi_priority(vehicle_array, width):
     return blocking_score
 
 
+# functie voor het vinden van het winnende pad, gegeven een node met het winpositie
 def node_traversal(node):
     nodes = []
     while node.parent != None:
@@ -157,6 +113,7 @@ def node_traversal(node):
         node = node.parent
     return nodes
 
+# returned alle mogelijke children van een bepaalde bordconfiguratie
 def move_vehicle(vehicles, width, all_positions):
         table_queue = table_retriever(width, vehicles)
         for car in vehicles:
@@ -164,40 +121,29 @@ def move_vehicle(vehicles, width, all_positions):
                 if car.col_v - 1 >= 0 and table_queue[car.row_v][car.col_v - 1] == ' ':
                     for new_car in all_positions[car.id]:
                         if car.col_v - 1 == new_car.col_v:
-                            # vanaf hieronder kan in eigen functie
-                            children = copy.deepcopy(vehicles)
-                            children.remove(car)
-                            children.append(new_car)
+                            children = add_new_car(vehicles, car, new_car)
                             yield children
 
                 if car.col_v + car.length <= 5 and table_queue[car.row_v][car.col_v + car.length] == ' ':
                     for new_car in all_positions[car.id]:
                         if car.col_v + 1 == new_car.col_v:
-                            # vanaf hieronder kan in eigen functie
-                            children = copy.copy(vehicles)
-                            children.remove(car)
-                            children.append(new_car)
+                            children = add_new_car(vehicles, car, new_car)
                             yield children
 
             if car.orientation == 'ver':
                 if car.row_v - 1 >= 0 and table_queue[car.row_v - 1][car.col_v] == ' ':
                     for new_car in all_positions[car.id]:
                         if car.row_v - 1 == new_car.row_v:
-                            # vanaf hieronder kan in eigen functie
-                            children = copy.copy(vehicles)
-                            children.remove(car)
-                            children.append(new_car)
+                            children = add_new_car(vehicles, car, new_car)
                             yield children
 
                 if car.row_v + car.length <= 5 and table_queue[car.row_v + car.length][car.col_v] == ' ':
                     for new_car in all_positions[car.id]:
                         if car.row_v + 1 == new_car.row_v:
-                            # vanaf hieronder kan in eigen functie
-                            children = copy.copy(vehicles)
-                            children.remove(car)
-                            children.append(new_car)
+                            children = add_new_car(vehicles, car, new_car)
                             yield children
 
+# heuristiek voor het aantal kinderen dat een bordconfiguratie kan maken
 def children_score(vehicle_array, width, all_positions):
     children = move_vehicle(vehicle_array, width, all_positions)
     return sum(1 for x in children)
