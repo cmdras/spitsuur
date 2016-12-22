@@ -1,0 +1,9 @@
+A1,0,3,hor
+A2,4,0,hor
+D1,0,0,ver
+D2,3,0,hor
+B,5,1,hor
+T,2,4,hor
+H,3,3,ver
+E,1,2,ver
+F,3,5,ver
