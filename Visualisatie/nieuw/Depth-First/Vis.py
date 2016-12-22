@@ -1,4 +1,3 @@
-import Tkinter
 import itertools
 import copy
 import sys
@@ -20,7 +19,6 @@ class Node:
     def __init__(self, value):
         self.value = value
         self.parent = None
-        self.score = 0
 
 
 class Board(object):
@@ -90,7 +88,7 @@ class Board(object):
                             yield children
 
 
-def astar_solver(table, width, a):
+def astar_solver(table, width):
     i = 0
     start_time = datetime.datetime.now()
     print "**********"
@@ -100,26 +98,27 @@ def astar_solver(table, width, a):
     openset.append(current)
     while openset:
         current = openset.pop()
-        x = (table_retriever(width, current.value))
         if game_win2(current.value):
             print "You win!"
             end_time = datetime.datetime.now()
             elapsed = end_time - start_time
             print "Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds."
             winning_moves = node_traversal(current)
-            f = open('file.txt', 'w')
+            f = open('B21df.txt', 'w')
             for node in reversed(winning_moves):
                 j = table_retriever(width, node.value)
                 for x in j:
                     f.write(repr(x))
                     f.write("\n")
                 f.write("--------------------\n")
+            f.write("Time elapsed: " + str(elapsed.seconds) + " seconds and " + str(elapsed.microseconds) + " microseconds.\n")
+            f.write("number of moves: " + str(len(winning_moves)))
             f.close()
             print "number of moves: " + str(len(winning_moves))
             break
 
         # maak deque hiervan
-        closedset.add(repr(x))
+        # b2: 1.513.994 MemoryError
         table.vehicles = current.value
         children = table.move_vehicle()
         for child in children:
@@ -176,8 +175,7 @@ def start_rushhour():
             break
     board = Board(board_size, game)
     board.all_positions = all_possible_vehicles(board.vehicles, board_size)
-    solver = str(raw_input("which solver?: "))
-    astar_solver(board, board_size, solver)
+    astar_solver(board, board_size)
 
 
     # print board.x
